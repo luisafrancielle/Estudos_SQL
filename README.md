@@ -2,14 +2,14 @@
 Existem diversos conceitos que, conjuntamente, compreendem um “ambiente SQL”:
 
 <p>• Esquemas </p>
-• Catálogos 
-• Domínios 
-• Conexões e Sessões 
-• Usuários 
-• Privilégios 
-• Visões 
-• Transações 
-• etc
+<p>• Catálogos </p>
+<p>• Domínios </p>
+<p>• Conexões e Sessões </p>
+<p>• Usuários </p>
+<p>• Privilégios </p>
+<p>• Visões </p>
+<p>• Transações </p>
+<p>• etc </p>
 
 
 SQL Lição 1: Consultas SELECT:
