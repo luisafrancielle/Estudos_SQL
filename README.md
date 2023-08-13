@@ -1,6 +1,6 @@
 # Estudos de SQL:
 
-Estudo realizado usando o site: https://sqlbolt.com/ como base.
+Estudo realizado usando [SQLBOLT](https://sqlbolt.com/) como base.
 
 SQL Lição 1: Consultas SELECT:
 
