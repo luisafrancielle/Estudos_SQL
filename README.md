@@ -1,7 +1,7 @@
-#Estudos de SQL:
+<h1>Estudos de SQL:</h1>h1>
 Existem diversos conceitos que, conjuntamente, compreendem um “ambiente SQL”:
 
-• Esquemas </b>
+<p>• Esquemas </p>
 • Catálogos 
 • Domínios 
 • Conexões e Sessões 
