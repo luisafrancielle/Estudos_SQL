@@ -1,20 +1,10 @@
 # Estudos de SQL:
-Existem diversos conceitos que, conjuntamente, compreendem um “ambiente SQL”:
 
-<p>• Esquemas </p>
-<p>• Catálogos </p>
-<p>• Domínios </p>
-<p>• Conexões e Sessões </p>
-<p>• Usuários </p>
-<p>• Privilégios </p>
-<p>• Visões </p>
-<p>• Transações </p>
-<p>• etc </p>
-
+Estudo realizado usando o site: https://sqlbolt.com/ como base.
 
 SQL Lição 1: Consultas SELECT:
 
-É dada uma tabela de dados, a consulta mais básica que poderíamos escrever seria aquela que seleciona algumas colunas (propriedades) da tabela com todas as linhas (instâncias).
+A consulta mais básica que poderíamos escrever seria aquela que seleciona algumas colunas (propriedades) da tabela com todas as linhas (instâncias).
 
 ```
 SELECT coluna, outra_coluna
@@ -39,21 +29,23 @@ FROM minhatabela
 WHERE condição 
 AND/OR outra_condição;
 ```
+
 SQL Lição 3: Consultas com restrições (Pt. 2):
 
 Mostramos alguns operadores específicos de dados de texto comuns abaixo:
 
 |   |   |   |
 |---|---|---|
-|Operator|Condition|Example|
-|=|Case sensitive exact string comparison (_notice the single equals_)|col_name = "abc"|
-|!= or <>|Case sensitive exact string inequality comparison|col_name != "abcd"|
-|LIKE|Case insensitive exact string comparison|col_name LIKE "ABC"|
+|Operador|Condição|Exemplo|
+|=|Comparação exata de strings com distinção entre maiúsculas e minúsculas ( _observe o único igual_ )|col_name = "abc"|
+|!= or <>|Comparação de desigualdade de string exata com distinção entre maiúsculas e minúsculas|col_name != "abcd"|
+|LIKE|Comparação de string exata sem distinção entre maiúsculas e minúsculas|col_name LIKE "ABC"|
 |NOT LIKE|Case insensitive exact string inequality comparison|col_name NOT LIKE "ABCD"|
-|%|Used anywhere in a string to match a sequence of zero or more characters (only with LIKE or NOT LIKE)|col_name LIKE "%AT%"  <br>(matches "AT", "ATTIC", "CAT" or even "BATS")|
-|_ | Used anywhere in a string to match a single character (only with LIKE or NOT LIKE)|col_name LIKE "AN_"  <br>(matches "AND", but not "AN")|
-|IN (…)|String exists in a list|col_name IN ("A", "B", "C")|
-|NOT IN (…)|String does not exist in a list|col_name NOT IN ("D", "E", "F")|
+|%|Usado em qualquer lugar em uma string para corresponder a uma sequência de zero ou mais caracteres (somente com LIKE ou NOT LIKE)|col_name LIKE "%AT%"  <br>(matches "AT", "ATTIC", "CAT" or even "BATS")|
+|_ | Usado em qualquer lugar em uma string para corresponder a um único caractere (somente com LIKE ou NOT LIKE)|col_name LIKE "AN_"  <br>(matches "AND", but not "AN")|
+|IN (…)|String existe em uma lista|col_name IN ("A", "B", "C")|
+|NOT IN (…)|String não existe em uma lista|col_name NOT IN ("D", "E", "F")|
+
 
 Alguns exemplos: 
 1. Encontre todos os filmes dirigidos por John Lasseter:
@@ -497,3 +489,124 @@ DELETE FROM minha_tabela
 WHERE condição;
 ```
 
+1. Este banco de dados está ficando muito grande, vamos remover todos os filmes lançados **antes de** 2005:
+```
+DELETE FROM movies
+WHERE Year < 2005;
+```
+
+**SQL Lição 16: Criando tabelas:**
+
+Para criar uma tabela nova no seu banco: `CREATE TABLE`
+
+Criar instrução de tabela com restrição de tabela opcional e valor padrão: 
+```
+CREATE TABLE IF NOT EXISTS minha_tabela (
+coluna Tipo DEFAULT valor_padrão,
+outra_tabela coluna Tipo DEFAULT valor_padrão,
+...
+);
+```
+
+Ao criar uma tabela, pode ser que já exista outra com mesmo nome, para evitar que esse erro aconteça usa se `IF NOT EXISTS`
+
+Podemos encontrar todos os tipos de campos de dados para o postgres neste [link](https://www.postgresql.org/docs/12/datatype.html).
+
+Alguns mais utilizados para números:
+
+	Integer --> Inteiro
+	Real ---> Casas decimais 
+	Serial --> Auto incrementa o inteiro 
+	Numeric --> Definir a precisão das casas decimais
+
+Alguns mais utilizados para textos:
+
+	varchar --> Texto 
+	char --> Define a quantidade de caracteres 
+	text --> Não tem ideia do tamanho do texto 
+
+Usamos muito o boolean:
+
+	Verdadeiro ou falso
+
+Data e hora:
+
+	date --> data
+	time - hora
+	timestamp --> Data e hora
+
+RESTRIÇÕES DA TABELA:
+
+|   |   |
+|---|---|
+|Limitação|Descrição|
+|`PRIMARY KEY`|Isso significa que os valores nessa coluna são exclusivos e cada valor pode ser usado para identificar uma única linha nessa tabela.|
+|`AUTOINCREMENT`|Para valores inteiros, isso significa que o valor é automaticamente preenchido e incrementado a cada inserção de linha. Não suportado em todos os bancos de dados.|
+|`UNIQUE`|Isso significa que os valores nesta coluna devem ser únicos, então você não pode inserir outra linha com o mesmo valor nesta coluna como outra linha na tabela. Difere da `PRIMARY KEY` porque não precisa ser uma chave para uma linha na tabela.|
+|`NOT NULL`|Isso significa que o valor inserido não pode ser `NULL`.|
+|`CHECK (expression)`|Isso permite que você execute uma expressão mais complexa para testar se os valores inseridos são válidos. Por exemplo, você pode verificar se os valores são positivos ou maiores que um tamanho específico, ou começam com um determinado prefixo, etc.|
+|`FOREIGN KEY`|Esta é uma verificação de consistência que garante que cada valor nesta coluna corresponda a outro valor em uma coluna em outra tabela.  <br>  <br>Por exemplo, se houver duas tabelas, uma listando todos os funcionários por ID e outra listando suas informações de folha de pagamento, a 'FOREIGN KEY' pode garantir que cada linha na tabela de folha de pagamento corresponda a um funcionário válido na lista mestre de funcionários.|
+
+Exemplo:
+```
+CREATE TABLE aluno(
+	id serial,
+	nome VARCHAR(255),
+	cpf CHAR(11),
+	observação TEXT,
+	idade INTEGER,
+	dinheiro NUMERIC(10,2),
+	altura real,
+	ativo BOOLEAN,
+	data_nascimento DATE,
+	hora_aula TIME,
+	matriculado_em timestamp
+);
+```
+
+**SQL Lição 17: Alterando tabelas:**
+
+Adicionar, remover ou modificar colunas e restrições em tabela pode ser feito por meio do `ALTER TABLE`
+
+```
+ALTER TABLE minha_tabela
+ADD coluna Tipo
+	DEFAULT valor_padrão;
+```
+
+Remover colunas:
+
+```
+ALTER TABLE minha_tabela
+DROP coluna_que_quer_deletar;
+```
+
+Renomear tabela: 
+
+```
+ALTER TABLE minha_tabela
+RENAME TO novo_nome;
+```
+
+1. Adicione uma coluna chamada **Aspect_ratio** com um tipo de dados **FLOAT** para armazenar a proporção em que cada filme foi lançado:
+```
+ALTER TABLE Movies
+ADD Aspect_ratio FLOAT;
+```
+
+2. Adicione outra coluna chamada **Language** com um tipo de dados **TEXT** para armazenar o idioma no qual o filme foi lançado. Certifique-se de que o padrão para esse idioma seja **o inglês**:
+
+```
+ALTER TABLE Movies
+ADD Language TEXT
+    DEFAULT English;
+```
+
+**SQL Lição 18: Eliminando tabelas**
+
+`DELETE` remove registros individuais de uma tabela, Já o `DROP`remove completamente a tabela. 
+```
+DROP TABLE IF EXISTS minha_tabela;
+```
+
+Se tiver outra tabela dependente de colunas na tabela que está removendo (por exemplo: `FOREIGN KEY`), será necessário atualizar todas as tabelas dependentes primeiro para remover as linhas dependentes ou remover totalmente essas tabelas.
