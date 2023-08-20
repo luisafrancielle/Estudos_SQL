@@ -610,3 +610,36 @@ DROP TABLE IF EXISTS minha_tabela;
 ```
 
 Se tiver outra tabela dependente de colunas na tabela que está removendo (por exemplo: `FOREIGN KEY`), será necessário atualizar todas as tabelas dependentes primeiro para remover as linhas dependentes ou remover totalmente essas tabelas.
+
+**SUBCONSULTA:**
+
+Dentro de uma `FROM` cláusula, você pode `JOIN` fazer subconsultas com outras tabelas, dentro de uma restrição `WHERE` ou `HAVING`, você pode testar expressões contra os resultados da subconsulta e até mesmo em expressões da `SELECT`cláusula, que permitem retornar dados diretamente da subconsulta.
+
+Como as subconsultas podem ser aninhadas, cada subconsulta deve ser totalmente incluída entre parênteses para estabelecer a hierarquia adequada. As subconsultas podem fazer referência a qualquer tabela no banco de dados e fazer uso das construções de uma consulta normal (embora algumas implementações não permitam que as subconsultas usem `LIMIT` ou `OFFSET`).
+
+Suponha que você tenha uma lista geral de funcionários, seus departamentos (engenharia, vendas etc.), receita e salário. Desta vez, você está examinando toda a empresa para encontrar os funcionários com desempenho abaixo da média em seus departamentos.
+
+Para cada funcionário, você precisaria calcular seu custo relativo à receita média gerada por todas as pessoas em seu departamento. Para tirar a média do departamento, a subconsulta precisará saber em qual departamento cada funcionário está:
+
+
+```
+SELECT * FROM Funcionários
+WHERE salário > (SELECT AVG(receita_gerada)
+FROM Funcionários AS dept_funcionários
+WHERE dept_funcionários.departamento = funcionários.departamento);
+```
+
+**Tópico SQL: Uniões, Interseções e Exceções:**
+
+Ao trabalhar com várias tabelas, o operador `UNION` e `UNION ALL`permite anexar os resultados de uma consulta a outra, assumindo que elas tenham a mesma contagem de colunas, ordem e tipo de dados. Se você usar o `UNION` sem o `ALL`, as linhas duplicadas entre as tabelas serão removidas do resultado.
+
+```
+SELECT coluna, outra_coluna
+FROM minha_tabela
+UNION / UNION ALL / INTERSECT / EXCEPT
+SELECT outra_coluna, outra_coluna2
+FROM outra_tabela
+ORDER BY coluna DESC
+LIMIT n;
+```
+
